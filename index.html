@@ -2,6 +2,7 @@
 <html>
 <head>
 <base target="_top">
+<link rel="manifest" href="./manifest.json">
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -5988,6 +5989,14 @@
                     <div class="my-4 flex justify-center">
                         <canvas ref="qrCanvas" class="w-64 h-64 border rounded-lg p-2"></canvas>
                     </div>
+
+                    <div v-if="qrCodeUrl" class="my-4">
+                        <p class="text-xs text-gray-500 mb-1">QR Code 網址：</p>
+                        <div class="bg-gray-100 text-gray-700 p-2 rounded-md text-xs break-all font-mono select-all">
+                            {{ qrCodeUrl }}
+                        </div>
+                    </div>
+
                     <p class="text-xs text-gray-500">使用手機相機掃描此 QR Code<br>即可快速查詢物品庫存。</p>
                 </div>
 
@@ -6453,6 +6462,7 @@ const TruncatedTextComponent = {
 const qrCodeModalData = {
     isQRCodeModalOpen: false,
     selectedItemForQRCode: null,
+    qrCodeUrl: '',
 };
 
 const qrCodeModalMethods = {
@@ -6475,6 +6485,7 @@ const qrCodeModalMethods = {
             if (window.QRious && this.$refs.qrCanvas) {
                 const canvas = this.$refs.qrCanvas;
                 const url = `${baseUrl}/item-checker.html?item_id=${item.id}`;
+                this.qrCodeUrl = url;
                 
                 // 使用 qrious 產生 QR Code
                 new QRious({
@@ -6497,6 +6508,7 @@ const qrCodeModalMethods = {
     closeQRCodeModal() {
         this.isQRCodeModalOpen = false;
         this.selectedItemForQRCode = null;
+        this.qrCodeUrl = '';
     },
 
     downloadQRCodeImage() {
@@ -12349,6 +12361,21 @@ app.component('quill-editor', QuillEditorComponent);
 app.component('truncated-text', TruncatedTextComponent);
 
 app.mount('#app');
+</script>
+
+<script>
+    // 註冊 Service Worker
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./service-worker.js')
+                .then(registration => {
+                    console.log('Service Worker registered successfully:', registration);
+                })
+                .catch(error => {
+                    console.log('Service Worker registration failed:', error);
+                });
+        });
+    }
 </script>
 </body>
 </html>
