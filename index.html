@@ -17,6 +17,17 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
+/* --- 新增：解決行動裝置 100vh 高度問題 --- */
+.min-h-screen {
+  min-height: 100vh; /* 備用方案 */
+  min-height: 100svh; /* 優先使用 small viewport height */
+}
+.h-screen {
+  height: 100vh; /* 備用方案 */
+  height: 100svh; /* 優先使用 small viewport height */
+}
+/* --- 新增結束 --- */
+
 @keyframes pulse-logo {
   0%, 100% {
     transform: scale(1);
