@@ -318,11 +318,11 @@
       
         <div v-if="userSession && currentUser" class="flex">
             <transition name="fade">
-    <div v-if="isMobileMenuOpen" @click="closeMobileMenu" class="fixed inset-0 bg-black/50 z-40 lg:hidden"></div>
+    <div v-if="isMobileMenuOpen" @click="closeMobileMenu" class="fixed inset-0 bg-black/50 z-40 md:hidden"></div>
 </transition>
 
 <aside class="fixed top-0 left-0 h-screen w-64 bg-gradient-to-b from-gray-800 to-gray-900 text-white p-6 flex flex-col shadow-lg z-50 transform transition-transform duration-300 ease-in-out"
-       :class="isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
+       :class="isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'">
     <div class="text-center mb-6">
         <h1 class="text-3xl font-bold text-indigo-400 tracking-wider"><i class="fa-solid fa-box-open mr-2"></i>{{ systemSettings.system_subtitle || 'Consump' }}</h1>
         <p class="text-gray-300 mt-2">{{ systemSettings.system_title || '消耗用品管理系統' }}</p>
@@ -364,20 +364,20 @@
     </div>
 </aside>
     
-            <main class="flex-grow w-full lg:ml-64 lg:w-[calc(100%-256px)] transition-all duration-300"
+            <main class="flex-grow w-full md:ml-64 md:w-[calc(100%-256px)] transition-all duration-300"
                   :style="{ paddingTop: isImpersonating ? '48px' : '0' }">
-                <header class="fixed top-0 w-full lg:w-[calc(100%-256px)] left-0 lg:left-64 h-[70px] bg-white border-b border-gray-200 flex items-center justify-between px-6 z-30">
+                <header class="fixed top-0 w-full md:w-[calc(100%-256px)] left-0 md:left-64 h-[70px] bg-white border-b border-gray-200 flex items-center justify-between px-6 z-30">
     <div class="flex items-center gap-4">
-        <button @click="toggleMobileMenu" class="text-gray-600 text-xl lg:hidden">
+        <button @click="toggleMobileMenu" class="text-gray-600 text-xl md:hidden">
             <i class="fa-solid fa-bars"></i>
         </button>
         <!-- Mobile View: System Brand -->
-        <div class="lg:hidden flex items-center gap-2 text-xl font-bold text-indigo-600">
+        <div class="md:hidden flex items-center gap-2 text-xl font-bold text-indigo-600">
             <i class="fa-solid fa-box-open"></i>
             <span>{{ systemSettings.system_subtitle || 'Consump' }}</span>
         </div>
         <!-- Desktop View: Page Title -->
-        <h1 class="text-2xl font-bold text-gray-800 hidden lg:block">{{ pageTitle }}</h1>
+        <h1 class="text-2xl font-bold text-gray-800 hidden md:block">{{ pageTitle }}</h1>
     </div>
     
     <div v-if="currentUser" class="flex items-center gap-4">
@@ -421,7 +421,7 @@
     </div>
 </header>
 
-                <div v-if="isImpersonating" class="fixed top-[70px] left-0 lg:left-64 w-full lg:w-[calc(100%-256px)] bg-amber-400 text-black p-3 text-sm font-semibold text-center z-20 shadow-lg flex items-center justify-center gap-4">
+                <div v-if="isImpersonating" class="fixed top-[70px] left-0 md:left-64 w-full md:w-[calc(100%-256px)] bg-amber-400 text-black p-3 text-sm font-semibold text-center z-20 shadow-lg flex items-center justify-center gap-4">
                     <span><i class="fa-solid fa-user-secret mr-2"></i>您目前正在以「<strong>{{ currentUser.full_name }}</strong>」的身份操作。</span>
                     <button @click="endImpersonation" class="font-bold underline hover:text-red-700">結束模擬</button>
                 </div>
@@ -479,11 +479,11 @@
     </div>
     <div class="mt-8 bg-white p-8 rounded-xl shadow-md"><h2 class="text-2xl font-bold text-gray-800 mb-4">歡迎使用 Consump 系統！</h2><p class="text-gray-600">這裡是您的個人化儀表板，您可以在此快速掌握重要資訊。</p><p class="text-gray-600 mt-2">請使用選單開始操作。如果您是領用人，可以從「領用申請」開始請領物品。</p></div>
 </div></div>
-                        <div v-if="currentPage === 'requisition'"><div class="flex flex-col lg:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
+                        <div v-if="currentPage === 'requisition'"><div class="flex flex-col md:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
 
     <!-- 右側控制面板 -->
-    <div class="w-full lg:w-1/3 xl:w-1/4 flex-shrink-0 lg:order-last">
-        <div class="lg:sticky top-[86px] flex flex-col lg:max-h-[calc(100vh-102px)] gap-6">
+    <div class="w-full md:w-1/3 xl:w-1/4 flex-shrink-0 md:order-last">
+        <div class="md:sticky top-[86px] flex flex-col md:max-h-[calc(100vh-102px)] gap-6">
             <div class="bg-white rounded-xl shadow-md flex-shrink-0">
     <!-- 標題 -->
     <div class="p-4 border-b flex justify-between items-center">
@@ -537,7 +537,7 @@
                     </button>
                 </div>
             </div>
-            <div class="hidden lg:flex justify-between items-center pt-2">
+            <div class="hidden md:flex justify-between items-center pt-2">
                 <p class="text-sm font-bold text-gray-500">檢視模式</p>
                 <div class="inline-flex rounded-md shadow-sm" role="group">
                     <button @click="requisitionViewMode = 'card'" type="button" class="px-3 py-1 text-sm font-medium border rounded-l-lg transition-colors duration-200" :class="requisitionViewMode === 'card' ? 'bg-indigo-600 text-white border-indigo-600 z-10' : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-100'">
@@ -551,7 +551,7 @@
         </div>
     </div>
 </div>
-            <div class="hidden lg:flex flex-col flex-grow min-h-0">
+            <div class="hidden md:flex flex-col flex-grow min-h-0">
                 <div class="bg-white rounded-xl shadow-2xl flex flex-col flex-grow min-h-0">
     <div class="p-4 border-b flex-shrink-0">
         <h2 class="text-lg font-bold text-gray-800 flex items-center gap-3">
@@ -600,7 +600,7 @@
     </div>
 
     <!-- 左側主內容區域 -->
-    <div class="w-full lg:w-2/3 xl:w-3/4 flex-grow lg:order-first">
+    <div class="w-full md:w-2/3 xl:w-3/4 flex-grow md:order-first">
         <div v-if="hasAnyRequisitionItems" class="space-y-8">
             <template v-for="category in filteredCategories" :key="category.id">
                 <div v-if="itemsForCategory(category.id).length > 0" class="bg-white p-6 rounded-xl shadow-md">
@@ -779,11 +779,11 @@
         </div>
     </div>
 </div></div>
-                        <div v-if="currentPage === 'history'"><div class="flex flex-col lg:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
+                        <div v-if="currentPage === 'history'"><div class="flex flex-col md:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
 
     <!-- 右側控制面板 -->
-    <div class="w-full lg:w-1/3 xl:w-1/4 flex-shrink-0 lg:order-last">
-        <div class="lg:sticky top-[86px] flex flex-col">
+    <div class="w-full md:w-1/3 xl:w-1/4 flex-shrink-0 md:order-last">
+        <div class="md:sticky top-[86px] flex flex-col">
              <div class="bg-white rounded-xl shadow-md flex-shrink-0">
 <!-- 標題 -->
 <div class="p-4 border-b flex justify-between items-center">
@@ -856,7 +856,7 @@
             </div>
         </div>
 
-        <div class="hidden lg:flex justify-between items-center pt-2">
+        <div class="hidden md:flex justify-between items-center pt-2">
             <p class="text-sm font-bold text-gray-500">檢視模式</p>
             <div class="inline-flex rounded-md shadow-sm" role="group">
                 <button @click="historyViewMode = 'card'" type="button" class="px-3 py-1 text-sm font-medium border rounded-l-lg transition-colors duration-200" :class="historyViewMode === 'card' ? 'bg-indigo-600 text-white border-indigo-600 z-10' : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-100'">
@@ -880,7 +880,7 @@
     </div>
 
     <!-- 左側主內容區域 -->
-    <div class="w-full lg:w-2/3 xl:w-3/4 flex-grow lg:order-first">
+    <div class="w-full md:w-2/3 xl:w-3/4 flex-grow md:order-first">
         <div v-if="historyViewMode === 'card'">
              <div v-if="filteredAndSortedRequisitions.length === 0" class="bg-white p-6 rounded-xl shadow-md text-center text-gray-500">
                 <i class="fa-solid fa-folder-open fa-2x mb-4 text-gray-400"></i>
@@ -1167,10 +1167,10 @@
         </div>
     </div>
 </div></div>
-                        <div v-if="currentPage === 'approval'"><div class="flex flex-col lg:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
+                        <div v-if="currentPage === 'approval'"><div class="flex flex-col md:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
     <!-- 右側控制面板 -->
-    <div class="w-full lg:w-1/3 xl:w-1/4 flex-shrink-0 lg:order-last">
-        <div class="lg:sticky top-[86px] flex flex-col">
+    <div class="w-full md:w-1/3 xl:w-1/4 flex-shrink-0 md:order-last">
+        <div class="md:sticky top-[86px] flex flex-col">
              <div class="bg-white rounded-xl shadow-md flex-shrink-0">
     <!-- 標題 -->
     <div class="p-4 border-b flex justify-between items-center">
@@ -1232,7 +1232,7 @@
             </div>
         </div>
         
-        <div class="hidden lg:flex justify-between items-center pt-2">
+        <div class="hidden md:flex justify-between items-center pt-2">
             <p class="text-sm font-bold text-gray-500">檢視模式</p>
             <div class="inline-flex rounded-md shadow-sm" role="group">
                 <button @click="approvalViewMode = 'card'" type="button" class="px-3 py-1 text-sm font-medium border rounded-l-lg transition-colors duration-200" :class="approvalViewMode === 'card' ? 'bg-indigo-600 text-white border-indigo-600 z-10' : 'bg-white text-gray-900 border-gray-200 hover:bg-gray-100'">
@@ -1257,7 +1257,7 @@
     </div>
 
     <!-- 左側主內容區域 -->
-    <div class="w-full lg:w-2/3 xl:w-3/4 flex-grow lg:order-first">
+    <div class="w-full md:w-2/3 xl:w-3/4 flex-grow md:order-first">
         <div v-if="approvalViewMode === 'card'">
             <div v-if="filteredAndSortedApprovalTasks.length === 0" class="bg-white p-6 rounded-xl shadow-md text-center text-gray-500">
                 <i class="fa-solid fa-check-double fa-2x mb-4 text-gray-400"></i>
@@ -1544,11 +1544,11 @@
         </div>
     </div>
 </div></div>
-                        <div v-if="currentPage === 'procurement'"><div class="flex flex-col lg:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
+                        <div v-if="currentPage === 'procurement'"><div class="flex flex-col md:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
 
     <!-- 右側控制面板 -->
-    <div class="w-full lg:w-1/3 xl:w-1/4 flex-shrink-0 lg:order-last">
-        <div class="lg:sticky top-[86px] flex flex-col">
+    <div class="w-full md:w-1/3 xl:w-1/4 flex-shrink-0 md:order-last">
+        <div class="md:sticky top-[86px] flex flex-col">
              <div class="space-y-6">
     <!-- 上方卡片：控制中心 -->
     <div class="bg-white rounded-xl shadow-md">
@@ -1704,7 +1704,7 @@
     </div>
 
     <!-- 左側主內容區域 -->
-    <div class="w-full lg:w-2/3 xl:w-3/4 flex-grow lg:order-first">
+    <div class="w-full md:w-2/3 xl:w-3/4 flex-grow md:order-first">
         <!-- 根據選擇顯示對應的管理頁面 -->
         <div v-show="procurementViewMode === 'stock-in'">
              <div class="bg-white p-6 rounded-xl shadow-md">
@@ -1928,10 +1928,10 @@
         </div>
     </div>
 </div></div>
-                        <div v-if="currentPage === 'stock-in-detail'"><div v-if="activeStockIn" class="flex flex-col lg:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
+                        <div v-if="currentPage === 'stock-in-detail'"><div v-if="activeStockIn" class="flex flex-col md:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
 
     <!-- 左欄：主操作區 -->
-    <div class="w-full lg:w-2/3 xl:w-3/4 flex-grow bg-white p-4 sm:p-6 rounded-xl shadow-md">
+    <div class="w-full md:w-2/3 xl:w-3/4 flex-grow bg-white p-4 sm:p-6 rounded-xl shadow-md">
         <div class="flex items-center mb-6">
             <button @click="goBackToOrderList" class="text-gray-500 hover:text-gray-700 mr-4"><i class="fa-solid fa-arrow-left fa-lg"></i></button>
             <h2 class="text-2xl font-bold text-gray-800">新增進貨</h2>
@@ -2013,7 +2013,7 @@
     </div>
 
     <!-- 右欄：固定資訊區 -->
-    <div class="w-full lg:w-1/3 xl:w-1/4 flex-shrink-0">
+    <div class="w-full md:w-1/3 xl:w-1/4 flex-shrink-0">
         <div class="sticky top-[86px] bg-white rounded-xl shadow-md">
             <div class="p-4 border-b">
                 <h3 class="text-lg font-bold text-gray-800 flex items-center gap-3"><i class="fa-solid fa-receipt text-indigo-500"></i>進貨資訊</h3>
@@ -2062,11 +2062,11 @@
         </div>
     </div>
 </div></div>
-                        <div v-if="currentPage === 'inventory-checks'"><div class="flex flex-col lg:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
+                        <div v-if="currentPage === 'inventory-checks'"><div class="flex flex-col md:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
 
     <!-- 右側控制面板 -->
-    <div class="w-full lg:w-1/3 xl:w-1/4 flex-shrink-0 lg:order-last">
-        <div class="lg:sticky top-[86px] flex flex-col">
+    <div class="w-full md:w-1/3 xl:w-1/4 flex-shrink-0 md:order-last">
+        <div class="md:sticky top-[86px] flex flex-col">
              <div class="bg-white rounded-xl shadow-md flex-shrink-0">
     <!-- 標題 -->
     <div class="p-4 border-b flex justify-between items-center">
@@ -2160,7 +2160,7 @@
     </div>
 
     <!-- 左側主內容區域 -->
-    <div class="w-full lg:w-2/3 xl:w-3/4 flex-grow lg:order-first">
+    <div class="w-full md:w-2/3 xl:w-3/4 flex-grow md:order-first">
         <div class="bg-white p-6 rounded-xl shadow-md">
             <!-- 頁面標題與操作按鈕 -->
             <div class="flex justify-between items-center mb-4">
@@ -2296,10 +2296,10 @@
         </div>
     </div>
 </div></div>
-                        <div v-if="currentPage === 'inventory-check-detail'"><div v-if="activeInventoryCheck" class="flex flex-col lg:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
+                        <div v-if="currentPage === 'inventory-check-detail'"><div v-if="activeInventoryCheck" class="flex flex-col md:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
 
-    <div class="w-full lg:w-1/3 xl:w-1/4 flex-shrink-0 lg:order-last">
-        <div class="lg:sticky top-[86px] flex flex-col"><div class="bg-white rounded-xl shadow-md flex-shrink-0">
+    <div class="w-full md:w-1/3 xl:w-1/4 flex-shrink-0 md:order-last">
+        <div class="md:sticky top-[86px] flex flex-col"><div class="bg-white rounded-xl shadow-md flex-shrink-0">
     <div class="p-4 border-b flex justify-between items-center">
         <h2 class="text-lg font-bold text-gray-800 flex items-center gap-3">
             <i class="fa-solid fa-filter text-indigo-500"></i>
@@ -2379,7 +2379,7 @@
 </div></div>
     </div>
 
-    <div class="w-full lg:w-2/3 xl:w-3/4 flex-grow lg:order-first">
+    <div class="w-full md:w-2/3 xl:w-3/4 flex-grow md:order-first">
         <div class="bg-white p-4 sm:p-6 rounded-xl shadow-md">
             <div class="flex items-center mb-6">
                 <button @click="goBackToCheckList" class="text-gray-500 hover:text-gray-700 mr-4 text-xl"><i class="fa-solid fa-arrow-left"></i></button>
@@ -2490,11 +2490,11 @@
         </div>
     </div>
 </div></div>
-                        <div v-if="currentPage === 'reports'"><div class="flex flex-col lg:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
+                        <div v-if="currentPage === 'reports'"><div class="flex flex-col md:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
 
     <!-- 右側控制面板 -->
-    <div class="w-full lg:w-1/3 xl:w-1/4 flex-shrink-0 lg:order-last">
-        <div class="lg:sticky top-[86px] flex flex-col">
+    <div class="w-full md:w-1/3 xl:w-1/4 flex-shrink-0 md:order-last">
+        <div class="md:sticky top-[86px] flex flex-col">
              <div class="space-y-6">
     <!-- 上方卡片：控制中心 -->
     <div class="bg-white rounded-xl shadow-md">
@@ -2684,7 +2684,7 @@
     </div>
 
     <!-- 左側主內容區域 -->
-    <div class="w-full lg:w-2/3 xl:w-3/4 flex-grow lg:order-first">
+    <div class="w-full md:w-2/3 xl:w-3/4 flex-grow md:order-first">
         <div class="bg-white p-6 rounded-xl shadow-md min-h-[calc(100vh-120px)]">
             <!-- 常用報表 & 樞紐分析 顯示區 -->
             <div v-if="reportMode === 'static' || reportMode === 'pivot'">
@@ -3006,11 +3006,11 @@
         </div>
     </div>
 </div></div>
-                        <div v-if="currentPage === 'user-management'"><div class="flex flex-col lg:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
+                        <div v-if="currentPage === 'user-management'"><div class="flex flex-col md:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
 
     <!-- 右側控制面板 -->
-    <div class="w-full lg:w-1/3 xl:w-1/4 flex-shrink-0 lg:order-last">
-        <div class="lg:sticky top-[86px] flex flex-col">
+    <div class="w-full md:w-1/3 xl:w-1/4 flex-shrink-0 md:order-last">
+        <div class="md:sticky top-[86px] flex flex-col">
              <div class="bg-white rounded-xl shadow-md flex-shrink-0">
     <!-- 標題 -->
     <div class="p-4 border-b flex justify-between items-center">
@@ -3090,7 +3090,7 @@
     </div>
 
     <!-- 左側主內容區域 -->
-    <div class="w-full lg:w-2/3 xl:w-3/4 flex-grow lg:order-first">
+    <div class="w-full md:w-2/3 xl:w-3/4 flex-grow md:order-first">
         <div class="bg-white p-6 rounded-xl shadow-md">
             <!-- 頁面標題與操作按鈕 -->
             <div class="flex justify-between items-center mb-4">
@@ -3240,11 +3240,11 @@
         </div>
     </div>
 </div></div>
-                        <div v-if="currentPage === 'item-management'"><div class="flex flex-col lg:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
+                        <div v-if="currentPage === 'item-management'"><div class="flex flex-col md:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
     
     <!-- 右側控制面板 -->
-    <div class="w-full lg:w-1/3 xl:w-1/4 flex-shrink-0 lg:order-last">
-        <div class="lg:sticky top-[86px] flex flex-col">
+    <div class="w-full md:w-1/3 xl:w-1/4 flex-shrink-0 md:order-last">
+        <div class="md:sticky top-[86px] flex flex-col">
              <div class="bg-white rounded-xl shadow-md flex-shrink-0">
     <!-- 標題 -->
     <div class="p-4 border-b flex justify-between items-center">
@@ -3337,7 +3337,7 @@
     </div>
 
     <!-- 左側主內容區域 -->
-    <div class="w-full lg:w-2/3 xl:w-3/4 flex-grow lg:order-first">
+    <div class="w-full md:w-2/3 xl:w-3/4 flex-grow md:order-first">
         <div class="bg-white p-6 rounded-xl shadow-md">
             <!-- 頁面標題與操作按鈕 -->
             <div class="flex justify-between items-center mb-4">
@@ -3494,11 +3494,11 @@
         </div>
     </div>
 </div></div>
-                        <div v-if="currentPage === 'category-management'"><div class="flex flex-col lg:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
+                        <div v-if="currentPage === 'category-management'"><div class="flex flex-col md:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
     
     <!-- 右側控制面板 -->
-    <div class="w-full lg:w-1/3 xl:w-1/4 flex-shrink-0 lg:order-last">
-        <div class="lg:sticky top-[86px] flex flex-col">
+    <div class="w-full md:w-1/3 xl:w-1/4 flex-shrink-0 md:order-last">
+        <div class="md:sticky top-[86px] flex flex-col">
              <div class="bg-white rounded-xl shadow-md flex-shrink-0">
     <!-- 標題 -->
     <div class="p-4 border-b flex justify-between items-center">
@@ -3568,7 +3568,7 @@
     </div>
 
     <!-- 左側主內容區域 -->
-    <div class="w-full lg:w-2/3 xl:w-3/4 flex-grow lg:order-first">
+    <div class="w-full md:w-2/3 xl:w-3/4 flex-grow md:order-first">
         <div class="bg-white p-6 rounded-xl shadow-md">
             <!-- 頁面標題與操作按鈕 -->
             <div class="flex justify-between items-center mb-4">
@@ -3728,10 +3728,10 @@
         </div>
     </div>
 </div></div>
-                        <div v-if="currentPage === 'wiki'"><div class="flex flex-col lg:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
+                        <div v-if="currentPage === 'wiki'"><div class="flex flex-col md:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
     
     <!-- 左側主內容區 -->
-    <div class="w-full lg:w-3/4 bg-white p-6 sm:p-8 rounded-xl shadow-md">
+    <div class="w-full md:w-3/4 bg-white p-6 sm:p-8 rounded-xl shadow-md">
         <div v-if="wikiCurrentSlug === 'changelog'">
             <h1 class="text-3xl font-bold text-gray-900 border-b pb-4 mb-8 flex items-center gap-3">
                 <i class="fa-solid fa-scroll text-indigo-500"></i>
@@ -3775,8 +3775,8 @@
     </div>
 
     <!-- 右側導覽列 -->
-    <div class="w-full lg:w-1/4 flex-shrink-0">
-        <div class="bg-white p-4 rounded-xl shadow-md lg:sticky top-[86px]">
+    <div class="w-full md:w-1/4 flex-shrink-0">
+        <div class="bg-white p-4 rounded-xl shadow-md md:sticky top-[86px]">
             <h2 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">閱讀選單</h2>
             <template v-if="changelogEntries.length > 0 || wikiTutorials.length > 0">
                 <ul class="space-y-1">
@@ -3808,11 +3808,11 @@
         </div>
     </div>
 </div></div>
-                        <div v-if="currentPage === 'admin'"><div v-if="!isLoading" class="flex flex-col lg:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
+                        <div v-if="currentPage === 'admin'"><div v-if="!isLoading" class="flex flex-col md:flex-row gap-6" style="animation: fadeIn 0.5s ease-out forwards;">
 
     <!-- 右側控制面板 -->
-    <div class="w-full lg:w-1/3 xl:w-1/4 flex-shrink-0 lg:order-last">
-        <div class="lg:sticky top-[86px] flex flex-col">
+    <div class="w-full md:w-1/3 xl:w-1/4 flex-shrink-0 md:order-last">
+        <div class="md:sticky top-[86px] flex flex-col">
              <div class="space-y-6">
     <!-- 上方卡片：控制中心 -->
     <div class="bg-white rounded-xl shadow-md">
@@ -3944,7 +3944,7 @@
     </div>
 
     <!-- 左側主內容區域 -->
-    <div class="w-full lg:w-2/3 xl:w-3/4 flex-grow lg:order-first pb-24">
+    <div class="w-full md:w-2/3 xl:w-3/4 flex-grow md:order-first pb-24">
         <div v-if="adminViewMode === 'settings'">
              <div class="space-y-8">
 
@@ -12199,7 +12199,7 @@ methods: {
 ...procurementMethods,
 ...priceAnalysisMethods,
 handleResize() {
-    const isMobile = window.innerWidth < 1024;
+    const isMobile = window.innerWidth < 768; // 調整斷點為 768px (md)
     this.isMobileView = isMobile;
 
     if (isMobile) {
