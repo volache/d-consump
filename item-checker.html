@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物品庫存查詢</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        [v-cloak] { display: none; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-700 via-gray-900 to-black min-h-screen flex items-center justify-center p-4">
+
+<div id="app" v-cloak class="w-full max-w-lg">
+
+    <!-- 系統標題 -->
+    <div class="text-center mb-6" style="animation: fadeIn 0.5s ease-out forwards;">
+        <h1 class="text-4xl font-bold text-white tracking-wider"><i class="fa-solid fa-box-open mr-3 text-indigo-400"></i>{{ systemSubtitle }}</h1>
+        <p class="text-gray-300 mt-2">{{ systemTitle }}</p>
+    </div>
+
+    <!-- 讀取狀態 -->
+    <div v-if="isLoading" class="text-center text-white p-8 bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl">
+        <i class="fa-solid fa-spinner fa-spin text-4xl text-indigo-400"></i>
+        <p class="mt-4 text-lg tracking-wider">正在查詢物品資料⋯⋯</p>
+    </div>
+
+    <!-- 錯誤狀態 -->
+    <div v-else-if="error" class="text-center text-white p-8 bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl" style="animation: fadeIn 0.5s ease-out forwards;">
+        <i class="fa-solid fa-circle-xmark text-4xl text-red-400"></i>
+        <h2 class="mt-4 text-2xl font-bold">查詢失敗</h2>
+        <p class="mt-2 text-gray-300">{{ error }}</p>
+        <button @click="rescan" class="mt-6 inline-flex items-center justify-center gap-2 font-medium rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2">
+            <i class="fa-solid fa-qrcode"></i> 查詢其他物品
+        </button>
+    </div>
+
+    <!-- 成功狀態 -->
+    <div v-else-if="item" class="bg-white rounded-2xl shadow-2xl overflow-hidden" style="animation: fadeIn 0.5s ease-out forwards;">
+        <div class="h-48 bg-gray-200">
+            <img :src="item.images && item.images.find(img => img.is_primary)?.url || placeholderImageUrl" :alt="item.name" class="w-full h-full object-contain">
+        </div>
+        <div class="p-6 space-y-6">
+            <div>
+                <span v-if="item.category" class="px-3 py-1 text-sm font-semibold rounded-full text-white" :style="{ backgroundColor: item.category.color_hex || '#6b7280' }">
+                    {{ item.category.name }}
+                </span>
+                <h1 class="text-3xl font-bold text-gray-800 mt-2">{{ item.name }}</h1>
+                <p v-if="item.brand || item.model" class="text-gray-500 font-semibold">
+                    {{ item.brand }} <span v-if="item.brand && item.model">／</span> {{ item.model }}
+                </p>
+            </div>
+
+            <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-lg">
+                <p class="text-sm font-bold text-indigo-800">目前庫存數量</p>
+                <p class="text-5xl font-bold text-indigo-600 mt-1 flex items-baseline gap-x-2">
+                    {{ item.current_stock }}
+                    <span class="text-2xl font-medium text-indigo-500">{{ item.unit }}</span>
+                </p>
+                 <p class="text-xs text-indigo-700 mt-2" :class="{ 'font-bold text-red-600': item.current_stock <= item.safe_stock }">
+                    （安全庫存建議量為：{{ item.safe_stock }} {{ item.unit }}）
+                </p>
+            </div>
+
+            <div class="text-sm text-gray-600 space-y-2 pt-4 border-t">
+                <div class="grid grid-cols-3 gap-x-4">
+                    <strong class="col-span-1">物品規格：</strong>
+                    <span class="col-span-2">{{ item.specifications || '－' }}</span>
+                </div>
+                <div class="grid grid-cols-3 gap-x-4">
+                    <strong class="col-span-1">存置地點：</strong>
+                    <span class="col-span-2">{{ item.storage_location || '－' }}</span>
+                </div>
+                <div class="grid grid-cols-3 gap-x-4">
+                    <strong class="col-span-1">分類核發員：</strong>
+                    <span class="col-span-2">{{ item.category.approver?.full_name || '未指定' }}</span>
+                </div>
+                <div class="grid grid-cols-3 gap-x-4">
+                    <strong class="col-span-1">最後更新：</strong>
+                    <span class="col-span-2">{{ formatDateTime(item.updated_at) }}</span>
+                </div>
+            </div>
+
+            <!-- 修改：顯示更豐富的領用資訊 -->
+            <div v-if="recentUsage.length > 0" class="pt-4 border-t">
+                <h3 class="text-base font-bold text-gray-700 mb-3">最近領用紀錄</h3>
+                <div class="space-y-3">
+                    <div v-for="(usage, index) in recentUsage" :key="index" class="bg-gray-50 border-l-4 border-amber-400 p-3 rounded-r-md text-sm">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-semibold text-gray-800">{{ usage.requester_name }}</p>
+                                <p class="text-xs text-gray-500">{{ formatDateTime(usage.created_at) }}</p>
+                            </div>
+                            <div class="font-mono font-bold text-xl text-red-600">
+                                -{{ usage.quantity }}
+                            </div>
+                        </div>
+                        <p v-if="usage.reason" class="text-xs text-gray-600 mt-2 pt-2 border-t border-dashed">
+                            <span class="font-semibold">事由：</span>{{ usage.reason }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 bg-gray-100 text-center">
+             <button @click="rescan" class="w-full inline-flex items-center justify-center gap-2 font-medium rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2">
+                <i class="fa-solid fa-qrcode"></i> 查詢其他物品
+            </button>
+        </div>
+    </div>
+    
+    <div class="text-center text-sm text-gray-400 my-6">
+         <i class="fa-solid fa-box-open mr-1 text-indigo-400"></i> 由 {{ systemTitle }} 提供技術支援
+    </div>
+</div>
+
+<script>
+    const { createApp } = Vue
+
+    // --- 請填寫您的 Supabase 設定 ---
+    const SUPABASE_URL = 'https://qsysxxzsrykdivoxgfkr.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFzeXN4eHpzcnlrZGl2b3hnZmtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY2NDc3OTQsImV4cCI6MjA3MjIyMzc5NH0.xPFNPzTdPIMhvKlBOG0fcAI-Ri_ToZyNlQig_GrKp2c';
+    // ---------------------------------
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const app = createApp({
+        data() {
+            return {
+                isLoading: true,
+                item: null,
+                error: null,
+                recentUsage: [],
+                systemTitle: '消耗用品管理系統',
+                systemSubtitle: 'Consump',
+                placeholderImageUrl: 'https://i.imgur.com/8qkN2rC.png',
+            }
+        },
+        methods: {
+            rescan() {
+                const newId = window.prompt("（測試用）請貼上新的物品 ID：");
+                if (newId && newId.trim() !== "") {
+                    const url = new URL(window.location);
+                    url.searchParams.set('item_id', newId.trim());
+                    window.location.href = url.href;
+                }
+            },
+            formatDate(isoString) {
+                if (!isoString) return '－';
+                try {
+                    const date = new Date(isoString);
+                    if (isNaN(date)) return '－';
+                    return date.toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                } catch (e) { return '－'; }
+            },
+            formatDateTime(isoString) {
+                if (!isoString) return '－';
+                try {
+                    const date = new Date(isoString);
+                    if (isNaN(date)) return '－';
+                    return date.toLocaleString('zh-TW', {
+                        year: 'numeric', month: '2-digit', day: '2-digit',
+                        hour: '2-digit', minute: '2-digit'
+                    });
+                } catch (e) { return '－'; }
+            }
+        },
+        async mounted() {
+            try {
+                const { data: settings } = await supabaseClient
+                    .from('system_settings')
+                    .select('key, value')
+                    .in('key', ['system_title', 'system_subtitle', 'placeholder_image_url']);
+                
+                if (settings) {
+                    this.systemTitle = settings.find(s => s.key === 'system_title')?.value || this.systemTitle;
+                    this.systemSubtitle = settings.find(s => s.key === 'system_subtitle')?.value || this.systemSubtitle;
+                    this.placeholderImageUrl = settings.find(s => s.key === 'placeholder_image_url')?.value || this.placeholderImageUrl;
+                    document.title = `物品庫存查詢 - ${this.systemTitle}`;
+                }
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const itemId = urlParams.get('item_id');
+
+                if (!itemId) {
+                    throw new Error('網址缺少物品 ID 參數，無法查詢。');
+                }
+
+                const [itemResult, usageResult] = await Promise.all([
+                    supabaseClient
+                        .from('items')
+                        .select('*, category:categories!inner(name, color_hex, approver:users!approver_id(full_name))')
+                        .eq('id', itemId)
+                        .single(),
+                    supabaseClient.rpc('get_public_item_usage_history', { p_item_id: itemId })
+                ]);
+
+                if (itemResult.error) {
+                    console.error(itemResult.error);
+                    throw new Error('查詢物品資料時發生錯誤。');
+                }
+                if (!itemResult.data) {
+                    throw new Error('找不到此物品，請確認 QR Code 是否正確。');
+                }
+                this.item = itemResult.data;
+
+                if (usageResult.error) {
+                    console.error("讀取領用紀錄失敗:", usageResult.error);
+                } else {
+                    this.recentUsage = usageResult.data;
+                }
+
+            } catch (err) {
+                this.error = err.message;
+            } finally {
+                this.isLoading = false;
+            }
+        }
+    });
+
+    app.mount('#app');
+</script>
+
+</body>
+</html>
