@@ -24,15 +24,15 @@
 
         [v-cloak] { display: none; }
         
-        /* 掃描器樣式優化 */
+        /* 掃描器樣式優化：移除圓角，改為直角以銜接上下元素 */
         #reader {
             width: 100%;
-            border-radius: 0.75rem;
             overflow: hidden;
+            border-radius: 0; /* 強制直角 */
         }
         #reader video { 
             object-fit: cover; 
-            border-radius: 0.75rem;
+            border-radius: 0 !important; /* 強制直角 */
         }
     </style>
 </head>
@@ -56,8 +56,9 @@
                 </button>
             </div>
             
+            <!-- 掃描器容器：直角設計 -->
             <div class="bg-black relative flex-grow flex items-center justify-center overflow-hidden">
-                <!-- 掃描器容器：使用 aspect-square 確保是正方形，避免壓扁 -->
+                <!-- 使用 aspect-square 確保是正方形，避免壓扁 -->
                 <div id="reader" class="w-full aspect-square bg-black"></div>
             </div>
             
@@ -323,21 +324,22 @@
                 }
 
                 const [itemResult, usageResult] = await Promise.all([
-                    supabaseClient
-                        .from('items')
-                        .select('*, category:categories!inner(name, color_hex, approver:users!approver_id(full_name))')
-                        .eq('id', itemId)
-                        .single(),
+                    // 修正：改用新的 SECURITY DEFINER RPC 來繞過 RLS 限制
+                    supabaseClient.rpc('get_item_details_public', { p_item_id: itemId }),
                     supabaseClient.rpc('get_public_item_usage_history', { p_item_id: itemId })
                 ]);
 
+                // 檢查 RPC 回傳的資料 (itemResult.data)
                 if (itemResult.error) {
                     console.error(itemResult.error);
-                    throw new Error('查詢物品資料時發生錯誤，或是無效的物品 ID。');
+                    throw new Error('查詢物品資料時發生錯誤。');
                 }
+                
                 if (!itemResult.data) {
-                    throw new Error('找不到此物品，請確認 QR Code 是否正確。');
+                    // 如果 RPC 執行成功但回傳 null，代表找不到該 ID
+                    throw new Error('無效的物品 ID，或是物品不存在。');
                 }
+                
                 this.item = itemResult.data;
 
                 if (usageResult.error) {
